@@ -48,4 +48,7 @@ To notify the encompassing application that an item has been selected, the `Scro
 
 The `example/select_one.py` script demonstrates the usage.
 
-<video src="examples/select_one_example.mp4" width=640>
+
+<!-- [![Watch the video](https://raw.githubusercontent.com/patrikflorek/sortiment/master/examples/select_one_example_screenshot.png)](https://raw.githubusercontent.com/patrikflorek/sortiment/main/select_one_example.mp4) -->
+
+[![Watch the video](examples/select_one_example_screenshot.png)](examples/select_one_example.mp4)
