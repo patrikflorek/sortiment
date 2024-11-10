@@ -1,4 +1,5 @@
 # Sortiment
+
 Sortiment is a project that provides simple KivyMD-based widgets for drag-and-drop arrangement of a scrollable list of items. Despite the project's name, only one widget is currently implemented.
 
 **Disclaimer:** This implementation focuses on code and functionality minimalism, so the user experience may not be perfect.
