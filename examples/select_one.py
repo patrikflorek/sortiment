@@ -82,9 +82,21 @@ KV = """
         cols: 2
         padding: "12dp"
         spacing: "12dp"
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: "12dp"
 
-        ScrollableDragNDropListContainer:
-            id: items_list_container
+            ScrollableDragNDropListContainer:
+                id: items_list_container
+
+            MDButton:
+                pos_hint: {"center_x": 0.5}
+                on_release: root.add_item()
+                MDButtonIcon: 
+                    icon: "plus"
+                MDButtonText:
+                    text: "Add Item"
+
 
         MDCard:
             style: "outlined"
@@ -118,6 +130,15 @@ class AppRoot(MDScreen):
         print("Selected item:", instance, selected_item_data)
         item_id = selected_item_data.get("id", "")
         self.ids.content_label.text = ITEM_CONTENTS.get(item_id, "")
+
+    def add_item(self):
+        new_item_data = {
+            "id": f"item_{len(self.items_list_container.items_data) + 1}",
+            "headline_text": f"Item {len(self.items_list_container.items_data) + 1}",
+            "supporting_text": "New item description...",
+        }
+        self.items_list_container.items_data.append(new_item_data)
+        self.items_list_container.selected_item_data = new_item_data
 
 
 class SelectOneApp(MDApp):

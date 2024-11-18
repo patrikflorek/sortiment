@@ -11,9 +11,11 @@ from sortiment.item import DragNDropListItem
 
 KV = """
 <ScrollableDragNDropListContainer>:
+    scroll_view: scroll_view
     items_list: items_list
     
     ScrollView:
+        id: scroll_view
 
         MDList:
             id: items_list
@@ -45,6 +47,8 @@ class ScrollableDragNDropListContainer(MDRelativeLayout):
         """Handles changes to the selected item data."""
         for item in self.items_list.children:
             item.selected = item.item_data == selected_item_data
+            if item.selected:
+                self.scroll_view.scroll_to(item)
 
     # -------------------------------------------------------------------------
     # Deprecated - Do not use! This will be removed in the next major release.
@@ -145,6 +149,8 @@ class ScrollableDragNDropListContainer(MDRelativeLayout):
             self.items_data.append(item_data)
         else:
             self.items_data.insert(index, item_data)
+
+        self.selected_item_data = item_data
 
     def remove_item(self, item_data: Dict[str, Any]) -> None:
         """Removes an item from the list."""
