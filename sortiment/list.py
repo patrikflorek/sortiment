@@ -51,7 +51,7 @@ class ScrollableDragNDropListContainer(MDRelativeLayout):
     @property
     def selected_item_idx(self) -> Optional[DragNDropListItem]:
         """Returns the index of the currently selected item."""
-        for idx, item in enumerate(self.ids.drag_n_drop_list.children[::-1]):
+        for idx, item in enumerate(self.items_list.children[::-1]):
             if item.selected:
                 return idx
 
@@ -63,8 +63,8 @@ class ScrollableDragNDropListContainer(MDRelativeLayout):
         Args:
             item_idx: Index of the item to select.
         """
-        list_child_idx = len(self.ids.drag_n_drop_list.children) - item_idx - 1
-        self.ids.drag_n_drop_list.children[list_child_idx].selected = True
+        list_child_idx = len(self.items_list.children) - item_idx - 1
+        self.items_list.children[list_child_idx].selected = True
 
     # -------------------------------------------------------------------------
 
