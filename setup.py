@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="sortiment",
-    version="0.1.0",
+    version="0.1.0dev",
     packages=find_packages(),
     install_requires=[
         "kivy>=2.3.0",
