@@ -7,7 +7,6 @@ from kivymd.uix.list import (
     MDListItemTrailingIcon,
     MDListItemHeadlineText,
     MDListItemSupportingText,
-    MDListItemTertiaryText,
 )
 
 
@@ -63,31 +62,39 @@ class DragNDropListItem(MDListItem):
             **kwargs: Additional keyword arguments to pass to the superclass constructor.
         """
         super().__init__(**kwargs)
-        self.item_data = item_data
         self._setup_item_components()
+        self.item_data = item_data
 
         self.ripple_effect = False  # Disable ripple effect
         self.opacity = UNSELECTED_OPACITY
 
     def _setup_item_components(self) -> None:
         """Sets up the child widgets of the list item based on the provided item data."""
-        if headline_text := self.item_data.get("headline_text"):
-            self.add_widget(MDListItemHeadlineText(text=headline_text))
+        self.headline_text_widget = MDListItemHeadlineText(text="Headline text")
+        self.add_widget(self.headline_text_widget)
 
-        if supporting_text := self.item_data.get("supporting_text"):
-            self.add_widget(MDListItemSupportingText(text=supporting_text))
-
-        if tertiary_text := self.item_data.get("tertiary_text"):
-            self.add_widget(MDListItemTertiaryText(text=tertiary_text))
+        self.supporting_text_widget = MDListItemSupportingText(text="Supporting text")
+        self.add_widget(self.supporting_text_widget)
 
         self.add_widget(DragHandle(parent_item=self))
 
-    def on_selected(self, instance: "DragNDropListItem", value: bool) -> None:
+    def on_item_data(self, instance: Any, value: Dict[str, Any]) -> None:
+        """
+        Handles changes to the item data by updating the child widgets.
+
+        Args:
+            instance: The instance of the list item.
+            value: The new item data.
+        """
+        self.headline_text_widget.text = value.get("headline_text", "")
+        self.supporting_text_widget.text = value.get("supporting_text", "")
+
+    def on_selected(self, instance: Any, value: bool) -> None:
         """
         Updates the opacity of the list item based on its selection state.
 
         Args:
-            instance: The instance of the list item.
+            instance: The instance of the list item or the list managing widget.
             value: The new selection state.
         """
         self.opacity = SELECTED_OPACITY if value else UNSELECTED_OPACITY

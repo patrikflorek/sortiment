@@ -8,7 +8,6 @@ content.
 
 from typing import Dict, List
 
-from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
@@ -105,16 +104,20 @@ class AppRoot(MDScreen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        # Bind events to get notified when the items list is updated or an item is selected
+        self.items_list_container.bind(items_data=self.on_items_list_updated)
+        self.items_list_container.bind(selected_item_data=self.on_item_selected)
+
         self.items_list_container.items_data = ITEMS_DATA
+        self.items_list_container.selected_item_data = ITEMS_DATA[0]
 
-        Clock.schedule_once(self._late_init)  # Wait for the list to be initialized
+    def on_items_list_updated(self, instance, items_data):
+        print("Items list updated:", instance, items_data)
 
-    def _late_init(self, dt):
-        self.items_list_container.selected_item_idx = 0
-
-    def display_item_content(self, item_idx):
-        item_data = ITEMS_DATA[item_idx]
-        self.ids.content_label.text = ITEM_CONTENTS[item_data["id"]]
+    def on_item_selected(self, instance, selected_item_data):
+        print("Selected item:", instance, selected_item_data)
+        item_id = selected_item_data.get("id", "")
+        self.ids.content_label.text = ITEM_CONTENTS.get(item_id, "")
 
 
 class SelectOneApp(MDApp):
@@ -125,10 +128,6 @@ class SelectOneApp(MDApp):
 
     def build(self):
         return AppRoot()
-
-    def on_item_selected(self, selected_item_idx):
-        """Handles item selection events."""
-        self.root.display_item_content(selected_item_idx)
 
 
 if __name__ == "__main__":
