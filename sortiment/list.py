@@ -47,7 +47,7 @@ class ScrollableDragNDropListContainer(MDRelativeLayout):
         """Handles changes to the selected item data."""
         for item in self.items_list.children:
             item.selected = item.item_data == selected_item_data
-            if item.selected:
+            if item.selected and item.y < 0:
                 self.scroll_view.scroll_to(item)
 
     # -------------------------------------------------------------------------
