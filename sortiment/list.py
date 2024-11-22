@@ -52,8 +52,18 @@ class ScrollableDragNDropListContainer(MDRelativeLayout):
         for item in self.items_list.children:
             item.selected = item.item_data == selected_item_data
 
-            if item.selected and self.scroll_view.height < self.items_list.height:
-                self.scroll_view.scroll_to(item)
+        # Schedule the height check to ensure the layout is updated
+        Clock.schedule_once(self._adjust_scroll_position)
+
+    def _adjust_scroll_position(self, *args):
+        """Adjusts the scroll position based on the heights of the scrollview and container."""
+        if self.scroll_view.height > self.items_list.height:
+            self.scroll_view.scroll_y = 1.0
+        else:
+            for item in self.items_list.children:
+                if item.selected:
+                    self.scroll_view.scroll_to(item, padding=0, animate=False)
+                    break
 
     # -------------------------------------------------------------------------
     # Deprecated - Do not use! This will be removed in the next major release.
