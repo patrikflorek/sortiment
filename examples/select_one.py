@@ -89,13 +89,27 @@ KV = """
             ScrollableDragNDropListContainer:
                 id: items_list_container
 
-            MDButton:
-                pos_hint: {"center_x": 0.5}
-                on_release: root.add_item()
-                MDButtonIcon: 
-                    icon: "plus"
-                MDButtonText:
-                    text: "Add Item"
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: "12dp"
+                size_hint_y: None
+                height: "48dp"
+
+                MDButton:
+                    pos_hint: {"center_x": 0.5}
+                    on_release: root.add_item()
+                    MDButtonIcon: 
+                        icon: "plus"
+                    MDButtonText:
+                        text: "Add Item"
+
+                MDButton:
+                    pos_hint: {"center_x": 0.5}
+                    on_release: root.clear_items()
+                    MDButtonIcon:
+                        icon: "delete"
+                    MDButtonText:
+                        text: "Clear Items"
 
 
         MDCard:
@@ -124,10 +138,13 @@ class AppRoot(MDScreen):
         self.items_list_container.selected_item_data = ITEMS_DATA[0]
 
     def on_items_list_updated(self, instance, items_data):
-        print("Items list updated:", instance, items_data)
+        """Handles changes to the items list."""
 
     def on_item_selected(self, instance, selected_item_data):
-        print("Selected item:", instance, selected_item_data)
+        if selected_item_data is None:
+            self.ids.content_label.text = ""
+            return
+
         item_id = selected_item_data.get("id", "")
         self.ids.content_label.text = ITEM_CONTENTS.get(item_id, "")
 
@@ -139,6 +156,10 @@ class AppRoot(MDScreen):
         }
         self.items_list_container.items_data.append(new_item_data)
         self.items_list_container.selected_item_data = new_item_data
+
+    def clear_items(self):
+        self.items_list_container.items_data = []
+        self.items_list_container.selected_item_data = None
 
 
 class SelectOneApp(MDApp):

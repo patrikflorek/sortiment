@@ -1,5 +1,6 @@
 from typing import Optional, Dict, Any
 
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import DictProperty, ListProperty
 
@@ -28,7 +29,7 @@ class ScrollableDragNDropListContainer(MDRelativeLayout):
     """A scrollable container that supports drag-and-drop functionality for list items."""
 
     items_data = ListProperty([])
-    selected_item_data = DictProperty(None)
+    selected_item_data = DictProperty(None, allownone=True)
 
     def on_items_data(self, instance, items_data):
         """Handles changes to the items data."""
@@ -45,9 +46,13 @@ class ScrollableDragNDropListContainer(MDRelativeLayout):
 
     def on_selected_item_data(self, instance, selected_item_data):
         """Handles changes to the selected item data."""
+        if selected_item_data is None:
+            return
+
         for item in self.items_list.children:
             item.selected = item.item_data == selected_item_data
-            if item.selected and item.y < 0:
+
+            if item.selected and self.scroll_view.height < self.items_list.height:
                 self.scroll_view.scroll_to(item)
 
     # -------------------------------------------------------------------------
