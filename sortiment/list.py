@@ -49,9 +49,15 @@ class ScrollableDragNDropListContainer(MDRelativeLayout):
         if selected_item_data is None:
             return
 
+        # selected_item = None
         for item in self.items_list.children:
-            item.selected = item.item_data == selected_item_data
-
+            if selected_item_data.get("item_id") is not None:
+                item.selected = item.item_data["item_id"] == selected_item_data["item_id"]
+            
+            if item.selected:
+                # selected_item = item
+                item.item_data = {**item.item_data, **selected_item_data}
+        
         # Schedule the height check to ensure the layout is updated
         Clock.schedule_once(self._adjust_scroll_position)
 
@@ -64,6 +70,16 @@ class ScrollableDragNDropListContainer(MDRelativeLayout):
                 if item.selected:
                     self.scroll_view.scroll_to(item, padding=0, animate=False)
                     break
+
+    def update_selected_item_data(self, item_data: Dict[str, Any]) -> None:
+        """Updates the data of the currently selected item."""
+        selected_item = next(
+            (item for item in self.items_list.children if item.selected), None
+        )
+        if selected_item is None:
+            return
+        
+        self.selected_item_data = {**selected_item.item_data, **item_data}
 
     # -------------------------------------------------------------------------
     # Deprecated - Do not use! This will be removed in the next major release.
@@ -93,7 +109,7 @@ class ScrollableDragNDropListContainer(MDRelativeLayout):
         """Handles item selection events."""
         if not selected:
             return
-
+        
         self.selected_item_data = item.item_data
 
         # -------------------------------------------------------------------------

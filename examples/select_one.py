@@ -23,37 +23,37 @@ WINDOW_HEIGHT = 360
 # Data for items
 ITEMS_DATA: List[Dict[str, str]] = [
     {
-        "id": "item_1",
+        "item_id": "item_1",
         "headline_text": "Item 1",
         "supporting_text": "Lorem ipsum dolor...",
     },
     {
-        "id": "item_2",
+        "item_id": "item_2",
         "headline_text": "Item 2",
         "supporting_text": "Sed do eiusmod...",
     },
     {
-        "id": "item_3",
+        "item_id": "item_3",
         "headline_text": "Item 3",
         "supporting_text": "Ut enim ad minim veniam...",
     },
     {
-        "id": "item_4",
+        "item_id": "item_4",
         "headline_text": "Item 4",
         "supporting_text": "Duis aute irure dolor in reprehenderit...",
     },
     {
-        "id": "item_5",
+        "item_id": "item_5",
         "headline_text": "Item 5",
         "supporting_text": "Excepteur sint occaecat cupidatat non proident...",
     },
     {
-        "id": "item_6",
+        "item_id": "item_6",
         "headline_text": "Item 6",
         "supporting_text": "Amet minim mollit...",
     },
     {
-        "id": "item_7",
+        "item_id": "item_7",
         "headline_text": "Item 7",
         "supporting_text": "Nostrud exercitation ullamco laboris...",
     },
@@ -124,6 +124,7 @@ KV = """
 
 Builder.load_string(KV)
 
+from kivy.clock import Clock
 
 class AppRoot(MDScreen):
     items_list_container = ObjectProperty(None)
@@ -137,6 +138,14 @@ class AppRoot(MDScreen):
         self.items_list_container.items_data = ITEMS_DATA
         self.items_list_container.selected_item_data = ITEMS_DATA[0]
 
+        Clock.schedule_once(self._set_item_test_content, 5.0)
+
+    def _set_item_test_content(self, *args):
+        self.items_list_container.update_selected_item_data({
+            "headline_text": "SELECTED ITEM CHANGED",
+            "supporting_text": "This item was selected and itscontent has been changed.",
+        })
+
     def on_items_list_updated(self, instance, items_data):
         """Handles changes to the items list."""
 
@@ -145,12 +154,12 @@ class AppRoot(MDScreen):
             self.ids.content_label.text = ""
             return
 
-        item_id = selected_item_data.get("id", "")
+        item_id = selected_item_data.get("item_id", "")
         self.ids.content_label.text = ITEM_CONTENTS.get(item_id, "")
 
     def add_item(self):
         new_item_data = {
-            "id": f"item_{len(self.items_list_container.items_data) + 1}",
+            "item_id": f"item_{len(self.items_list_container.items_data) + 1}",
             "headline_text": f"Item {len(self.items_list_container.items_data) + 1}",
             "supporting_text": "New item description...",
         }
